@@ -1,0 +1,19 @@
+Virtualization:
+
+Create a My VMware account and download and install the free ESXi hypervisor (version 6) on your spare hardware. Keep in mind, this is a destructive operation, so back up any important data before starting.
+
+https://my.vmware.com/en/web/vmware/evalcenter?p=free-esxi6
+
+
+Create a Red Hat developer account. This is free and gets you a subscription which lets you download Red Hat OS installers and patches:
+http://developers.redhat.com
+http://developers.redhat.com/products/rhel/get-started/
+
+Once configured, please create one OS X virtual machine and two Red Hat Linux virtual machines. OS 10.11.5 for the Mac, and Red Hat 7 for Linux. Depending on the hardware resources available to you, you may only be able to do one OS X VM and one Linux VM, which is fine as well. Apply all OS updates and patches.
+
+• On the OS X VM, install Server.app and create an SMB file share.
+
+• On the Linux VM 1, install the latest versions of Apache web server, OpenSSL, and mod_ssl. 
+
+• On Linux VM 2, install MySQL database server, version 5.6.31. 
+http://dev.mysql.com
