@@ -1,6 +1,7 @@
 Virtualization:
 
-Create a My VMware account and download and install the free ESXi hypervisor (version 6) on your spare hardware. Keep in mind, this is a destructive operation, so back up any important data before starting.
+Create a My VMware account and download and install the free ESXi hypervisor (version 6) on your spare hardware. Keep in mind, this is a 
+destructive operation, so back up any important data before starting.
 
 https://my.vmware.com/en/web/vmware/evalcenter?p=free-esxi6
 
@@ -9,7 +10,9 @@ Create a Red Hat developer account. This is free and gets you a subscription whi
 http://developers.redhat.com
 http://developers.redhat.com/products/rhel/get-started/
 
-Once configured, please create one OS X virtual machine and two Red Hat Linux virtual machines. OS 10.11.5 for the Mac, and Red Hat 7 for Linux. Depending on the hardware resources available to you, you may only be able to do one OS X VM and one Linux VM, which is fine as well. Apply all OS updates and patches.
+Once configured, please create one OS X virtual machine and two Red Hat Linux virtual machines. OS 10.11.5 for the Mac, and Red Hat 7 
+for Linux. Depending on the hardware resources available to you, you may only be able to do one OS X VM and one Linux VM, which is 
+fine as well. Apply all OS updates and patches.
 
 • On the OS X VM, install Server.app and create an SMB file share.
 
@@ -17,3 +20,82 @@ Once configured, please create one OS X virtual machine and two Red Hat Linux vi
 
 • On Linux VM 2, install MySQL database server, version 5.6.31. 
 http://dev.mysql.com
+
+
+Mac OS X Virtualization 
+
+# Source Credit
+# https://www.linkedin.com/pulse/install-mac-os-x-el-capitan-1011-vmware-esxi-60-apple-abhinav-biswas
+# Abhinav Biswas
+# How to enjoy Mac OS X El Capitan on Non-Apple Hardware - Say Thanks to Vmware ESXi
+
+
+So, the first thing you need to do is to customise the hypervisor layer by executing an Unlocker script by insanelymac.com. 
+Please note that you will need to register on the site in order to download the Unlocker tool. You need to enable SSH on your ESXi host. In order to do that, login to the host using VMware vShpere Client and navigate to Configuration->Security Profile. From here click on Properties in the upper right corner where it says Services. The dialog Services Properties should appear and from here you can click on SSH->Options and choose Start and stop with host. Click Start and then close all the open dialogs.
+Transfer the Unlocker-files to the host using any SFTP client. Make sure you extract the files somewhere on your client before transfer 
+and connect to the ESXi host using the user root. Once connected navigate to /vmfs/volumes/datastore01/ , replacing datastore01 with 
+your actual datastore name. Create a new folder (mkdir) called tools and transfer your unlockerXXX directory. Now cd into the uploaded
+directory and ensure the ESXi scripts have execute permissions by running chmod +x esxi-install.sh. Now run ./esxi-install.sh in order 
+to install the Unlocker. Reboot the ESXi host.
+ 
+
+Download and create the bootable OS X El Capitan ISO
+
+Grab the El Capitan installer app from the Apple Appstore. Note, you need  a real Mac in order to download and convert the El Capitan 
+installation disk. Once downloaded minimize or close the installer.
+
+Open the terminal and change directory to /tmp using command cd /tmp
+
+Create a new script file: nano ElCapitan.sh
+
+Paste the following into the script file and save:
+
+#!/bin/bash
+# Mount the installer image
+hdiutil attach /Applications/Install\ OS\ X\ El\ Capitan.app/Contents/SharedSupport/InstallESD.dmg -noverify -nobrowse -mountpoint /Volumes/install_app
+
+# Create the ElCapitan Blank ISO Image of 7316mb with a Single Partition - Apple Partition Map
+hdiutil create -o /tmp/ElCapitan.cdr -size 7316m -layout SPUD -fs HFS+J
+
+# Mount the ElCapitan Blank ISO Image
+hdiutil attach /tmp/ElCapitan.cdr.dmg -noverify -nobrowse -mountpoint /Volumes/install_build
+
+# Restore the Base System into the ElCapitan Blank ISO Image
+asr restore -source /Volumes/install_app/BaseSystem.dmg -target /Volumes/install_build -noprompt -noverify -erase
+
+# Remove Package link and replace with actual files
+rm /Volumes/OS\ X\ Base\ System/System/Installation/Packages
+cp -rp /Volumes/install_app/Packages /Volumes/OS\ X\ Base\ System/System/Installation/
+
+# Copy El Capitan installer dependencies
+cp -rp /Volumes/install_app/BaseSystem.chunklist /Volumes/OS\ X\ Base\ System/BaseSystem.chunklist
+cp -rp /Volumes/install_app/BaseSystem.dmg /Volumes/OS\ X\ Base\ System/BaseSystem.dmg
+
+# Unmount the installer image
+hdiutil detach /Volumes/install_app
+
+# Unmount the ElCapitan ISO Image
+hdiutil detach /Volumes/OS\ X\ Base\ System/
+
+# Convert the ElCapitan ISO Image to ISO/CD master (Optional)
+hdiutil convert /tmp/ElCapitan.cdr.dmg -format UDTO -o /tmp/ElCapitan.iso
+
+# Rename the ElCapitan ISO Image and move it to the desktop
+mv /tmp/ElCapitan.iso.cdr ~/Desktop/ElCapitan.iso
+
+Now ensure that the script file has execute permissions by running chmod +x ElCapitan.sh and run with sh ./ElCapitan.sh. 
+This will take some time, so just be patient. Once done it should have created a file called ElCapitan.iso on your desktop.
+
+Create a virtual Mac OS X VM
+
+The next step should be fairly simple if you have used ESXi before. As usual open your datastore and transfer the iso to wherever 
+you normally store your installation files. Then create a new vm, select Typical and you should be able to select Other and then 
+Apple Mac OS X 10.10 (64-bit). Complete the wizard, mount the ISO and install Mac OS X as usual. Please note that you must format 
+the hard drive using the disk utility before it will be visible in the install wizard.
+
+Configure Mac OS X
+
+It’s very important to install the VMware Tools as soon as possible after the install has finished. Without it Mac OS X might not awake 
+from sleep and in general be very unreliable. I recommend to turn off sleep and the screensaver in settings as these may cause issues. 
+
+Finally, reboot and start enjoying your virtual Mac on non-Apple hardware.
