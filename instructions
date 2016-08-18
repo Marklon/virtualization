@@ -31,7 +31,10 @@ Mac OS X Virtualization
 
 
 So, the first thing you need to do is to customise the hypervisor layer by executing an Unlocker script by insanelymac.com. 
-Please note that you will need to register on the site in order to download the Unlocker tool. You need to enable SSH on your ESXi host. In order to do that, login to the host using VMware vShpere Client and navigate to Configuration->Security Profile. From here click on Properties in the upper right corner where it says Services. The dialog Services Properties should appear and from here you can click on SSH->Options and choose Start and stop with host. Click Start and then close all the open dialogs.
+Please note that you will need to register on the site in order to download the Unlocker tool. You need to enable SSH on your ESXi host.
+In order to do that, login to the host using VMware vShpere Client and navigate to Configuration->Security Profile. From here click on 
+Properties in the upper right corner where it says Services. The dialog Services Properties should appear and from here you can click 
+on SSH->Options and choose Start and stop with host. Click Start and then close all the open dialogs.
 Transfer the Unlocker-files to the host using any SFTP client. Make sure you extract the files somewhere on your client before transfer 
 and connect to the ESXi host using the user root. Once connected navigate to /vmfs/volumes/datastore01/ , replacing datastore01 with 
 your actual datastore name. Create a new folder (mkdir) called tools and transfer your unlockerXXX directory. Now cd into the uploaded
