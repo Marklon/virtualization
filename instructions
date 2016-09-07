@@ -102,3 +102,8 @@ It’s very important to install the VMware Tools as soon as possible after the 
 from sleep and in general be very unreliable. I recommend to turn off sleep and the screensaver in settings as these may cause issues. 
 
 Finally, reboot and start enjoying your virtual Mac on non-Apple hardware.
+
+********************************************** Bonus Round *************************************************************
+
+# The location of the ssh authorized_keys file is
+$ /etc/ssh/keys-root/authorized_keys
