@@ -107,3 +107,10 @@ Finally, reboot and start enjoying your virtual Mac on non-Apple hardware.
 
 # The location of the ssh authorized_keys file is
 $ /etc/ssh/keys-root/authorized_keys
+
+# Allowing SSH access to ESXi/ESX hosts with public/private key authentication
+# https://kb.vmware.com/selfservice/microsites/search.do?language=en_US&cmd=displayKC&externalId=1002866
+
+
+# Add a local vSphere ESXi user without using the vSphere GUI
+# https://purevirtual.eu/2014/04/09/add-a-local-vsphere-esxi-user-without-using-the-vsphere-gui/
